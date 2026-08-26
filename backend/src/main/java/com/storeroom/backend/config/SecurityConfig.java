@@ -50,14 +50,23 @@ public class SecurityConfig {
         CorsConfiguration configuration =
                 new CorsConfiguration();
 
+        // Allowed frontend origins
         configuration.setAllowedOrigins(
                 List.of(
+                        // Local development
                         "http://localhost:3000",
                         "http://localhost:3001",
+
+                        // Production Vercel frontend
+                        "https://storeroom-cloud.vercel.app",
+
+                        // Previous Vercel domain
+                        // (currently redirects to storeroom-cloud.vercel.app)
                         "https://storeroom-virid.vercel.app"
                 )
         );
 
+        // Allowed HTTP methods
         configuration.setAllowedMethods(
                 List.of(
                         "GET",
@@ -69,6 +78,7 @@ public class SecurityConfig {
                 )
         );
 
+        // Allowed request headers
         configuration.setAllowedHeaders(
                 List.of(
                         "Authorization",
@@ -78,6 +88,7 @@ public class SecurityConfig {
                 )
         );
 
+        // Allow credentials such as Authorization headers/cookies
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source =
@@ -112,7 +123,7 @@ public class SecurityConfig {
                 // Disable CSRF for REST API
                 .csrf(csrf -> csrf.disable())
 
-                // JWT = stateless
+                // JWT authentication is stateless
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(
                                 SessionCreationPolicy.STATELESS
@@ -133,7 +144,7 @@ public class SecurityConfig {
                                 "/error"
                         ).permitAll()
 
-                        // Everything else requires JWT
+                        // All other API endpoints require JWT
                         .anyRequest().authenticated()
                 )
 
