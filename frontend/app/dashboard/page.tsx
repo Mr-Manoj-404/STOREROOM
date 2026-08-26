@@ -2661,94 +2661,6 @@ export default function DashboardPage() {
 
       <section className="mx-auto max-w-6xl px-6 py-8">
 
-        {/* TITLE + ACTIONS */}
-
-        <div className="mb-6 flex items-center justify-between">
-
-          <div>
-
-            <h2 className="text-3xl font-bold text-slate-900">
-              {pageTitle}
-            </h2>
-
-            <p className="mt-1 text-slate-500">
-              {viewMode === "starred"
-                ? "Your favorite files."
-                : viewMode === "trash"
-                ? "Files moved to Trash."
-                : currentFolder
-                ? `Files and folders inside ${currentFolder.name}.`
-                : "Manage your files stored in STOREROOM."}
-            </p>
-
-          </div>
-
-
-          <div className="flex items-center gap-3">
-
-            {viewMode === "all" && (
-              <button
-                type="button"
-                onClick={
-                  handleCreateFolder
-                }
-                disabled={
-                  creatingFolder
-                }
-                className="rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-100 disabled:opacity-50"
-              >
-                {creatingFolder
-                  ? "Creating..."
-                  : "📁 New Folder"}
-              </button>
-            )}
-
-            {viewMode !== "trash" && (
-              <label className="storeroom-upload-button cursor-pointer px-5 py-3 text-sm font-semibold text-white transition">
-                <span className="relative z-10">
-                  {uploading ? "Uploading..." : "⬆ Upload Files"}
-                </span>
-
-                <input
-                  type="file"
-                  multiple
-                  className="hidden"
-                  onChange={handleUpload}
-                  disabled={uploading}
-                />
-              </label>
-            )}
-
-          </div>
-
-        </div>
-
-
-        {viewMode !== "trash" && (
-          <div
-            className={`storeroom-dropzone mb-6 ${dragActive ? "is-active" : ""}`}
-            onDragOver={(event) => {
-              event.preventDefault();
-              event.dataTransfer.dropEffect = "copy";
-              setDragActive(true);
-            }}
-            onDrop={handleDropUpload}
-          >
-            <div className="storeroom-dropzone-icon">✦</div>
-            <div className="min-w-0">
-              <p className="text-sm font-semibold text-white">
-                {dragActive ? "Drop your files here" : "Drag & drop files here"}
-              </p>
-              <p className="mt-1 text-xs text-slate-400">
-                Upload multiple files at once, or use the Upload Files button.
-              </p>
-            </div>
-            <span className="hidden rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400 sm:inline-flex">
-              Secure upload
-            </span>
-          </div>
-        )}
-
         {/* =====================================================
             TABS
         ====================================================== */}
@@ -2882,6 +2794,71 @@ export default function DashboardPage() {
           )}
 
         </div>
+
+
+        {/* TITLE + ACTIONS */}
+
+        <div className="mb-6 flex items-center justify-between">
+
+          <div>
+
+            <h2 className="text-3xl font-bold text-slate-900">
+              {pageTitle}
+            </h2>
+
+            <p className="mt-1 text-slate-500">
+              {viewMode === "starred"
+                ? "Your favorite files."
+                : viewMode === "trash"
+                ? "Files moved to Trash."
+                : currentFolder
+                ? `Files and folders inside ${currentFolder.name}.`
+                : "Manage your files stored in STOREROOM."}
+            </p>
+
+          </div>
+
+
+          <div className="flex items-center gap-3">
+
+            {viewMode === "all" && (
+              <button
+                type="button"
+                onClick={
+                  handleCreateFolder
+                }
+                disabled={
+                  creatingFolder
+                }
+                className="rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-100 disabled:opacity-50"
+              >
+                {creatingFolder
+                  ? "Creating..."
+                  : "📁 New Folder"}
+              </button>
+            )}
+
+            {viewMode !== "trash" && (
+              <label className="storeroom-upload-button cursor-pointer px-5 py-3 text-sm font-semibold text-white transition">
+                <span className="relative z-10">
+                  {uploading ? "Uploading..." : "⬆ Upload Files"}
+                </span>
+
+                <input
+                  type="file"
+                  multiple
+                  className="hidden"
+                  onChange={handleUpload}
+                  disabled={uploading}
+                />
+              </label>
+            )}
+
+          </div>
+
+        </div>
+
+
 
 
         {/* =====================================================
@@ -4077,6 +4054,35 @@ export default function DashboardPage() {
           </div>
         </div>
       )}
+
+        {viewMode !== "trash" && (
+          <div className="mx-auto max-w-6xl px-6 pb-2">
+            <div
+              className={`storeroom-dropzone ${dragActive ? "is-active" : ""}`}
+              onDragOver={(event) => {
+                event.preventDefault();
+                event.dataTransfer.dropEffect = "copy";
+                setDragActive(true);
+              }}
+              onDrop={handleDropUpload}
+            >
+              <div className="storeroom-dropzone-icon">✦</div>
+              <div className="min-w-0">
+                <p className="text-sm font-semibold text-white">
+                  {dragActive ? "Drop your files here" : "Drag & drop files here"}
+                </p>
+                <p className="mt-1 text-xs text-slate-400">
+                  Upload multiple files at once, or use the Upload Files button.
+                </p>
+              </div>
+              <span className="hidden rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400 sm:inline-flex">
+                Secure upload
+              </span>
+            </div>
+          </div>
+        )}
+
+
 
         {/* =====================================================
             STORAGE USAGE
