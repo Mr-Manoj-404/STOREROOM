@@ -57,11 +57,13 @@ public class SecurityConfig {
                         "http://localhost:3000",
                         "http://localhost:3001",
 
-                        // Production Vercel frontend
+                        // Current production Vercel frontend
+                        "https://mystoreroom.vercel.app",
+
+                        // Previous production Vercel frontend
                         "https://storeroom-cloud.vercel.app",
 
-                        // Previous Vercel domain
-                        // (currently redirects to storeroom-cloud.vercel.app)
+                        // Old Vercel domain
                         "https://storeroom-virid.vercel.app"
                 )
         );
