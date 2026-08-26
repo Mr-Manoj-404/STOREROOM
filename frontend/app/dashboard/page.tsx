@@ -10,6 +10,11 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 
+// Backend API base URL. Set NEXT_PUBLIC_API_URL in Vercel/production.
+// The localhost fallback keeps local development working.
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+
 type FileItem = {
   id: string;
   name: string;
@@ -332,7 +337,7 @@ export default function DashboardPage() {
 
     const response =
       await fetch(
-        "http://localhost:8080/api/folders",
+        `${API_BASE}/api/folders`,
         {
           headers: {
             Authorization:
@@ -377,7 +382,7 @@ export default function DashboardPage() {
 
     const response =
       await fetch(
-        `http://localhost:8080/api/folders/${folderId}/children`,
+        `${API_BASE}/api/folders/${folderId}/children`,
         {
           headers: {
             Authorization:
@@ -423,7 +428,7 @@ export default function DashboardPage() {
 
       const response =
         await fetch(
-          "http://localhost:8080/api/files/storage",
+          `${API_BASE}/api/files/storage`,
           {
             headers: {
               Authorization:
@@ -473,16 +478,16 @@ export default function DashboardPage() {
     loadStorageUsage();
 
     let endpoint =
-      "http://localhost:8080/api/files";
+      `${API_BASE}/api/files`;
 
     if (viewMode === "starred") {
       endpoint =
-        "http://localhost:8080/api/files/starred";
+        `${API_BASE}/api/files/starred`;
     }
 
     if (viewMode === "trash") {
       endpoint =
-        "http://localhost:8080/api/files/trash";
+        `${API_BASE}/api/files/trash`;
     }
 
     if (
@@ -490,7 +495,7 @@ export default function DashboardPage() {
       currentFolder
     ) {
       endpoint =
-        `http://localhost:8080/api/files?folderId=${currentFolder.id}`;
+        `${API_BASE}/api/files?folderId=${currentFolder.id}`;
     }
 
     const response =
@@ -552,7 +557,7 @@ export default function DashboardPage() {
       setError("");
 
       const response = await fetch(
-        `http://localhost:8080/api/files/search?q=${encodeURIComponent(
+        `${API_BASE}/api/files/search?q=${encodeURIComponent(
           trimmedQuery
         )}`,
         {
@@ -845,7 +850,7 @@ export default function DashboardPage() {
 
         const response =
           await fetch(
-            "http://localhost:8080/api/folders",
+            `${API_BASE}/api/folders`,
             {
               method: "POST",
               headers: {
@@ -947,7 +952,7 @@ export default function DashboardPage() {
 
         const response =
           await fetch(
-            `http://localhost:8080/api/folders/${currentFolder.id}`,
+            `${API_BASE}/api/folders/${currentFolder.id}`,
             {
               method: "PUT",
               headers: {
@@ -1085,7 +1090,7 @@ export default function DashboardPage() {
 
         const response =
           await fetch(
-            `http://localhost:8080/api/folders/${currentFolder.id}`,
+            `${API_BASE}/api/folders/${currentFolder.id}`,
             {
               method: "DELETE",
               headers: {
@@ -1186,7 +1191,7 @@ export default function DashboardPage() {
         const formData = new FormData();
         formData.append("file", item.file);
 
-        let endpoint = "http://localhost:8080/api/files/upload";
+        let endpoint = `${API_BASE}/api/files/upload`;
 
         if (viewMode === "all" && currentFolder) {
           endpoint += `?folderId=${currentFolder.id}`;
@@ -1358,7 +1363,7 @@ export default function DashboardPage() {
       if (!token) return;
 
       const response = await fetch(
-        `http://localhost:8080/api/files/${file.id}/rename`,
+        `${API_BASE}/api/files/${file.id}/rename`,
         {
           method: "PUT",
           headers: {
@@ -1484,7 +1489,7 @@ export default function DashboardPage() {
       }
 
       const response = await fetch(
-        `http://localhost:8080/api/files/${file.id}/download`,
+        `${API_BASE}/api/files/${file.id}/download`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -1592,7 +1597,7 @@ export default function DashboardPage() {
 
       const response =
         await fetch(
-          `http://localhost:8080/api/files/${file.id}/download`,
+          `${API_BASE}/api/files/${file.id}/download`,
           {
             headers: {
               Authorization:
@@ -1698,7 +1703,7 @@ export default function DashboardPage() {
 
       const response =
         await fetch(
-          `http://localhost:8080/api/files/${file.id}/star`,
+          `${API_BASE}/api/files/${file.id}/star`,
           {
             method: "PUT",
             headers: {
@@ -1806,7 +1811,7 @@ export default function DashboardPage() {
 
       const response =
         await fetch(
-          `http://localhost:8080/api/files/${file.id}`,
+          `${API_BASE}/api/files/${file.id}`,
           {
             method: "DELETE",
             headers: {
@@ -1883,7 +1888,7 @@ export default function DashboardPage() {
 
       const response =
         await fetch(
-          `http://localhost:8080/api/files/${file.id}/restore`,
+          `${API_BASE}/api/files/${file.id}/restore`,
           {
             method: "PUT",
             headers: {
@@ -1973,7 +1978,7 @@ export default function DashboardPage() {
 
         const response =
           await fetch(
-            `http://localhost:8080/api/files/${file.id}/permanent`,
+            `${API_BASE}/api/files/${file.id}/permanent`,
             {
               method: "DELETE",
               headers: {
@@ -2260,7 +2265,7 @@ export default function DashboardPage() {
         imageFiles.map(async (file) => {
           try {
             const response = await fetch(
-              `http://localhost:8080/api/files/${file.id}/download`,
+              `${API_BASE}/api/files/${file.id}/download`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`,
