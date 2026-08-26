@@ -31,7 +31,6 @@ public class SecurityConfig {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
-
     // =========================================================
     // PASSWORD ENCODER
     // =========================================================
@@ -40,7 +39,6 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
     // =========================================================
     // CORS CONFIGURATION
@@ -54,7 +52,9 @@ public class SecurityConfig {
 
         configuration.setAllowedOrigins(
                 List.of(
-                        "http://localhost:3000"
+                        "http://localhost:3000",
+                        "http://localhost:3001",
+                        "https://storeroom-virid.vercel.app"
                 )
         );
 
@@ -72,7 +72,9 @@ public class SecurityConfig {
         configuration.setAllowedHeaders(
                 List.of(
                         "Authorization",
-                        "Content-Type"
+                        "Content-Type",
+                        "Accept",
+                        "Origin"
                 )
         );
 
@@ -88,7 +90,6 @@ public class SecurityConfig {
 
         return source;
     }
-
 
     // =========================================================
     // SPRING SECURITY
@@ -121,19 +122,22 @@ public class SecurityConfig {
                 // API permissions
                 .authorizeHttpRequests(auth -> auth
 
+                        // Public authentication endpoints
                         .requestMatchers(
                                 "/api/auth/signup",
                                 "/api/auth/login"
                         ).permitAll()
 
+                        // Allow Spring error endpoint
                         .requestMatchers(
                                 "/error"
                         ).permitAll()
 
+                        // Everything else requires JWT
                         .anyRequest().authenticated()
                 )
 
-                // JWT filter
+                // JWT authentication filter
                 .addFilterBefore(
                         jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class
