@@ -3102,7 +3102,13 @@ export default function DashboardPage() {
 
               </div>
 
-              <div className="relative">
+              <div
+                className={`relative ${
+                  folderMenuOpen
+                    ? "storeroom-folder-menu-open"
+                    : ""
+                }`}
+              >
 
                 <button
                   type="button"
@@ -3135,7 +3141,7 @@ export default function DashboardPage() {
                       }
                     />
 
-                    <div className="absolute right-0 top-12 z-50 w-48 overflow-hidden rounded-xl border border-slate-200 bg-white py-1 shadow-xl">
+                    <div className="storeroom-folder-dropdown absolute right-0 bottom-12 z-50 w-48 overflow-hidden rounded-xl border border-slate-200 bg-white py-1 shadow-xl">
 
                       <button
                         type="button"
@@ -3432,7 +3438,13 @@ export default function DashboardPage() {
                                 : "⬇ Download"}
                             </button>
 
-                            <div className="relative">
+                            <div
+                              className={`relative ${
+                                fileMenuOpenId === file.id
+                                  ? "storeroom-file-menu-open"
+                                  : ""
+                              }`}
+                            >
                               <button
                                 type="button"
                                 onClick={() =>
@@ -3508,7 +3520,13 @@ export default function DashboardPage() {
                               Stored
                             </span>
 
-                            <div className="relative">
+                            <div
+                              className={`relative ${
+                                fileMenuOpenId === file.id
+                                  ? "storeroom-file-menu-open"
+                                  : ""
+                              }`}
+                            >
                               <button
                                 type="button"
                                 onClick={() =>
@@ -4998,7 +5016,7 @@ export default function DashboardPage() {
         .storeroom-folder-panel,
         .storeroom-file-panel {
           position: relative;
-          overflow: hidden;
+          overflow: visible !important;
           border-color: rgba(129, 140, 248, .18) !important;
           background:
             linear-gradient(
@@ -5032,7 +5050,7 @@ export default function DashboardPage() {
         .storeroom-folder-card,
         .storeroom-file-card {
           position: relative;
-          overflow: hidden;
+          overflow: visible !important;
           border-color: rgba(129, 140, 248, .14) !important;
           background:
             linear-gradient(
@@ -5147,6 +5165,82 @@ export default function DashboardPage() {
 
         .storeroom-file-actions .bg-green-100 {
           box-shadow: 0 0 18px rgba(52,211,153,.07);
+        }
+
+        /* =====================================================
+           THREE-DOT MENU OVERFLOW + STACKING FIX
+        ===================================================== */
+
+        /*
+         * Menus must be able to leave their cards and panels.
+         * This removes clipping at every level that contains the
+         * three-dot action menu.
+         */
+        .storeroom-folder-panel,
+        .storeroom-file-panel,
+        .storeroom-folder-card,
+        .storeroom-file-card {
+          overflow: visible !important;
+        }
+
+        /*
+         * IMPORTANT: the whole main <section> is itself a stacking
+         * context (z-index: 10), and the Storage block below it is a
+         * later sibling with the same z-index. A high z-index on the
+         * menu/card alone therefore cannot escape the section and will
+         * still be painted underneath Storage. Raise the section while
+         * any three-dot menu is open.
+         */
+        .storeroom-dashboard > section:has(.storeroom-file-menu-open),
+        .storeroom-dashboard > section:has(.storeroom-folder-menu-open) {
+          position: relative;
+          z-index: 60 !important;
+        }
+
+        /*
+         * Grid items and folder/file cards must participate in the same
+         * stacking order so the active menu can overlap neighbouring
+         * cards, rows and the space below the card.
+         */
+        .storeroom-file-card:has(.storeroom-file-menu-open),
+        .storeroom-folder-card:has(.storeroom-folder-menu-open),
+        .storeroom-file-menu-open,
+        .storeroom-folder-menu-open {
+          position: relative;
+          z-index: 100 !important;
+        }
+
+        /* Keep the active dropdown itself above every card surface. */
+        .storeroom-file-card .z-50,
+        .storeroom-folder-panel .z-50,
+        .storeroom-file-panel .z-50 {
+          z-index: 110 !important;
+        }
+
+        /* The panel also needs to sit above other dashboard surfaces. */
+        .storeroom-folder-panel:has(.storeroom-folder-menu-open),
+        .storeroom-file-panel:has(.storeroom-file-menu-open) {
+          position: relative;
+          z-index: 90 !important;
+        }
+
+        /*
+         * Folder actions are intentionally opened UPWARD. The folder
+         * actions bar sits directly above the files/storage surfaces,
+         * so opening downward would cover those blocks on shorter
+         * screens. Opening upward keeps Rename/Delete fully visible
+         * without covering the blocks below.
+         */
+        .storeroom-folder-dropdown {
+          top: auto !important;
+          bottom: calc(100% + .75rem) !important;
+          z-index: 120 !important;
+        }
+
+        @media (max-width: 640px) {
+          .storeroom-folder-dropdown {
+            width: min(12rem, calc(100vw - 2rem)) !important;
+          }
         }
 
         /* =====================================================
